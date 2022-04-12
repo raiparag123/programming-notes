@@ -1,0 +1,402 @@
+
+
+Introduction ::
+    
+variables ::
+let 
+const
+var--> it is not recommended to use this anymore as it has global scope
+
+
+mostly use single colon to assignment.
+"null" typeof return object or bogus return value
+let z; is equal to let z = undefined;
+difference between null & undefined
+    Null is assignment with no value (it is intentional)
+    undefined is only declaration but lack of assignment (value is missing in the compiler)
+
+
+Concatenation ::    
+pre ES6 : console.log("my name is "+age);
+ES6 or ES16 (template string)
+    console.log(`myname is ${age}`);
+
+    const hello = `myname is ${age}`;
+
+
+Arrays
+you can have multiple datatype values in one single array
+const a = [1, "s", 1.2];
+a.push('12'); // to add elements to last of array
+a.pop(); // remove element from last of array
+a.unshift(123);// add element to begining of array
+console.log(a.indexOf(123)); // to get the index of value in array
+
+
+    Object literals (Need to study more)
+    they are key value pairs
+    const person = {
+        firstName: "hello",
+        lastName: "names",
+        age:30,
+        hobbies:['music','movies','sports'],
+        address:{
+            street:'50 main st',
+            city:'boston ',
+            state:'ma'
+        }
+    };
+
+
+  Destructuring (Need to study more)
+  const {firstName, lastName} = person;
+  
+  Array of objects ::
+        <!-- const todos = [
+        {
+            id: 1,
+            text: "take our trash",
+            isCompleted: true,
+        },
+        {
+            id: 2,
+            text: "Meeting with Boss",
+            isCompleted: true,
+        },
+        {
+            id: 1,
+            text: "Dentist Appointment",
+            isCompleted: true,
+        }
+        ];
+
+        console.log(todos[0].id) -->
+
+
+  JSON
+        To convert array of object to JSON
+        const todoJson = JSON.stringify(todos);
+
+
+For of Loop
+    
+    <!-- let hello = [1,2,3,4,5];
+        for (let a of hello){
+            console.log(a)
+        } -->
+
+    High Order Array methods(https://www.youtube.com/watch?v=rRgD1yVwIvE)
+
+        Recommended ::To do iteration with array use high order array methods
+        Foreach, map, filter
+
+        Foreach:: 
+        <!-- todos.forEach(function(todo){
+            console.log(todo.id)
+        }); -->
+
+        MAP ::
+        It returns array.
+        <!-- const b =  arr.map(function (i){
+            return i*i;
+        });
+        console.log(b)//array return by i*i; -->
+        
+        
+        
+        filter::
+        if you want to return conditional result we can use filter (IF)
+        const completedTodo = todos.filter(function (todo){
+            return todo.isCompleted === true;
+        })
+
+        ***Need to check Reduce()
+
+
+JS Objects
+
+Object Constructor Function :
+
+    Function which acts like a Constructor
+    It is considered good practice to name constructor functions with an upper-case first letter.
+        <!-- function Person(firstname, lastName, dob) {
+        this.firstname = firstname;
+        this.lastName = lastName;
+        this.dob = new Date(dob);
+        this.getBirthYear = () => {
+            return this.dob.getFullYear();
+        }
+        
+        }
+
+        const person1 = new Person('John','Almeda','10-01-1990');
+        const person2 = new Person('Hattrik','John','10-01-1992');
+
+        console.log(person1.getBirthYear());//1990
+        -->
+
+    Constructor Prototype
+        You cannot add a new property to an object constructor or new method to an object constructor.
+        Prototype property allows you to add new properties to object constructors:
+
+        <!--
+            //Adding property to object constructor 
+            Person.prototype.nationality = "English";
+
+            //Adding method to object constructor
+            Person.prototype.getFullname = ()=>{
+            return `${this.firstName} ${this.lastName}`;
+        } -->
+
+
+JavaScript Sets
+    A JavaScript Set is a collection of unique values.
+    Each value can only occur once in a Set.
+
+JavaScript Maps
+    A Map holds key-value pairs where the keys can be any datatype.
+
+
+    JS scope
+        Functional scope variable are deleted post execution of function
+
+        global scope variables are deleted post closing of tab or browser
+
+        If you assign a value to a variable that has not been declared, it will automatically become a GLOBAL variable.
+
+
+        <!-- var pop=10;//global scope
+
+        function abc() {
+            var hello=10;//functional scope
+            {
+                let x=2;//block scope;
+                var y = 2;
+                //functional scope as it can be access outside 
+                //this block
+            }
+        } -->
+    
+    JS Hoisting
+        Hositing is default behaviour to move declaration of variables to the top.
+
+        <!-- x = 5;
+        console.log(x);// 5
+        var x;
+
+        x = 5;
+        console.log(x);// Reference Error
+        let x;
+
+        x = 5;
+        console.log(x);// Syntax Error
+        const x; -->
+    
+    JS Scrict Mode
+        Forces js to accept only declared variables.
+        In a function, in strict mode, this is undefined.
+
+        <!-- "use strict";
+        x = 5;
+        console.log(x);// error as js is in strict mode
+        var x; -->
+
+    JavaScript Modules
+        JavaScript modules rely on the import and export statements.
+        JavaScript modules allow you to break up your code into separate files.
+        js modules can only be used in https protocol
+
+        <!-- person.js // export file
+        export const name = "Jesse";
+        export const age = 40;  
+        or
+        export {name, age};
+
+        personImport.js //import file
+        import { name, age } from "./person.js"; -->
+
+
+JS functions
+
+    JS Call
+    With call(), an object can use a method belonging to another object.
+    
+    <!-- const person = {
+        fullName: function() {
+          return this.firstName + " " + this.lastName;
+        }
+      }
+      const person1 = {
+        firstName:"John",
+        lastName: "Doe"
+      }
+      
+      // This will return "John Doe":
+      person.fullName.call(person1); -->
+
+      JS APPLY
+
+      The call() method takes arguments separately.
+      The apply() method takes arguments as an array.
+
+      <!-- const person = {
+        fullName: function(city, country) {
+          return this.firstName + " " + this.lastName + "," + city + "," + country;
+        }
+      }
+      
+      const person1 = {
+        firstName:"John",
+        lastName: "Doe"
+      }
+      
+      person.fullName.apply(person1, ["Oslo", "Norway"]); -->
+    
+    JS Bind
+    With the bind() method, an object can borrow a method from another object.
+
+    Function Closure
+
+    A closure is a function having access to the parent scope, even after the parent function has closed.
+
+    Traditional method to set counter which fails
+    <!-- // Initiate counter
+
+    // Function to increment counter
+    function add() {
+    let counter = 0; 
+    counter += 1;
+    }
+
+    // Call add() 3 times
+    add();
+    add();
+    add();
+
+    //The counter should now be 3. But it is 0 -->
+
+    Adding Closure
+    <!-- const add = (function () {
+        let counter = 0;
+        return function () {counter += 1; return counter}
+      })();
+      
+      add();
+      add();
+      add();
+      
+      // the counter is now 3 -->
+    
+      JS Classes
+
+      A JavaScript class is not an object.
+      It is a template for JavaScript objects.
+
+      <!--
+          class Car {
+        constructor(name, year) {
+          this.name = name;
+          this.year = year;
+        }
+        age(x) {
+          return x - this.year;
+        }
+      }
+      
+      let date = new Date();
+      let year = date.getFullYear();
+      
+      let myCar = new Car("Ford", 2014);
+      document.getElementById("demo").innerHTML=
+      "My car is " + myCar.age(year) + " years old."; -->
+    
+      Class Inheritence
+
+      <!-- class Car {
+        constructor(brand) {
+          this.carname = brand;
+        }
+        present() {
+          return 'I have a ' + this.carname;
+        }
+      }
+      
+      class Model extends Car {
+        constructor(brand, mod) {
+          super(brand); // calls constructor of parent class
+          this.model = mod;
+        }
+        show() {
+          return this.present() + ', it is a ' + this.model;
+        }
+      }
+      
+      let myCar = new Model("Ford", "Mustang"); -->
+
+      JS Static methods
+        Static class methods are defined on the class itself.
+
+        You cannot call a static method on an object, only on an object class.
+        <!-- class Car {
+            constructor(name) {
+              this.name = name;
+            }
+            static hello() {
+              return "Hello!!";
+            }
+          }
+          
+          let myCar = new Car("Ford");
+          
+          // You can call 'hello()' on the Car Class:
+          document.getElementById("demo").innerHTML = Car.hello();
+          
+          // But NOT on a Car Object:
+          // document.getElementById("demo").innerHTML = myCar.hello();
+          // this will raise an error. -->
+    
+        Rest Parameters
+        The rest parameter syntax allows us to represent an indefinite number of arguments as an array.
+        Use "..." 3 dots before parameters 
+
+        <!-- // es6 rest parameter
+        function fun(...input){
+            let sum = 0;
+            for(let i of input){
+                sum+=i;
+            }
+            return sum;
+        }
+        console.log(fun(1,2)); //3
+        console.log(fun(1,2,3)); //6
+        console.log(fun(1,2,3,4,5)); //15				 -->
+
+        
+        
+        Template Literals
+
+        Template Literals use back-ticks (``) rather than the quotes ("") to define a string
+        With template literals, you can use both single and double quotes inside a string:
+
+            <!-- let text =
+            `The quick
+            brown fox
+            jumps over
+            the lazy dog`;
+
+            let text = `He's often called "Johnny"`;
+            
+            let firstName = "John";
+            let lastName = "Doe";
+
+            let text = `Welcome ${firstName}, ${lastName}!`; -->
+
+      
+          
+
+
+        
+
+
+
+            

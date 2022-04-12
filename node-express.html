@@ -1,0 +1,572 @@
+HTTP bacis & server creation for node & express
+
+>> Creating a server
+
+start the server using nodemon
+write code in app.js
+<!-- 
+    var http = require('http');
+    http.createServer(function (request, response) {
+    const url = request.url; // to get the url of the request
+    const method = request.method; // to get the request method(get or post)
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+    response.end('Hello World');
+    }).listen(8081);
+
+    console.log('Server running at http://127.0.0.1:8081/'); 
+-->
+
+**response.end method must be included in all response (Mandatory)
+
+
+>> Send response to the server
+response.writeHead(200, {'content-type':'text/html'}); // status code, content-type
+response.write('jsdfkjskf')// to write content on the body of the message
+response.end() // Mandatory command 
+
+
+==================================================================
+Express
+Installing:
+
+npm install express --save
+
+to include static assets into the app.js which the server is not need to change.
+app.use(express.static('./public'))
+it will include all images, css or js or any other 
+
+>>Send response to the client
+In node data is send using API or SSR Template(Server side rendering)
+API sends JSON data
+SSR sends HTML/JS content data
+
+>> send json response 
+res.json([
+    {name:'helloWorld'}
+])
+
+
+>>Route params
+app.get('/api/products/:productId', (req, res) => {
+const {productId} = req.params;...
+
+
+>> Query String or URL Params
+const {name} = req.query;
+
+
+
+
+
+>> Middleware function
+create middleware for logging the method, url and current time
+
+const logger = (req,res, next) => {
+
+    const url = req.url;
+    const method = req.method;
+    const time = new Date().getFullYear();
+    console.log(method, url, time);
+    next()//mandatory if no return is specified
+}
+
+>>adding middleware to routes 
+app.get('/',logger, (req, res) => { //    adds middleware to this Route
+
+
+>>If we want to add middleware to all the routes
+app.use(logger) // should be placed before all routes
+
+>>to add middleware for all /api and /api/.. rooutes
+app.use('/api',logger)
+
+>>multiple middleware in app.use
+app.use(['logger','authorize'])
+
+
+
+
+>> Form Params 
+Parse form data
+to get the formdata in post, we need to use express.urlencoded middleware after all requires
+app.use(express.urlencoded({ extended: false}))
+
+req.body in the routes 
+=============================================================================================
+
+>>Express Router
+group similar routes into seperate files
+create folder name routes
+auth.js 
+people.js
+
+auth.js
+const express = require('express')
+const router = require('require')
+
+change app to router in the routes
+module.exports = router
+
+app.js
+const auth = require('./routes/auth')
+app.use('/login',auth)
+=============================================================================================
+
+>>Express Controllers
+
+create a new folder Controllers
+create a file people.js
+#people.js
+const getPeople = (req, res) => {
+    
+    all functionality with return
+}
+
+module.exports = {function1, function2 };
+
+#/routes people.js
+import the module 
+const {function1, fuction2,..} = require('./Controllers/people.js')
+
+router.get('/', function1)
+
+====================================================================
+
+routes.get('/', function1)
+routes.post('/', function2)
+
+alternate for above routes
+router.routes('/').get(function1).post(function2)
+
+===================================================================
+Integrating Mongo DB with Mongoose into Express
+
+1. Create account with mongo db
+2. create db user 
+3. set network access to access anywhere 
+4. Click on Connect in database side bar and copy the connection string
+5. Make sure you install mongoose (npm install mongoose)
+6. connect.js
+const mongoose = require("mongoose");
+
+const connectDB = (url) => {
+  return mongoose.connect(url, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  });
+};
+
+module.exports = connectDB;
+8. create a .env file in root, to store the secret connectionstring
+    we are storing the connection string in .env as it is ignored by git and connot be seen by other
+    MONGO_URI =  connection string with no quotes
+7. import the same in the app.js
+const connectDB =  require('./db/connect')
+require('dotenv').config() // for .env file 
+
+at the end of the program
+const start = async () => {
+    try {
+        await connectDB(process.env.MONGO_URI)
+        app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+  
+    } catch (error) {
+     console.log(error)   
+    }
+  }
+  
+  
+  start()
+
+
+8. create a model to set the schema(Validation Rules) of the db & collections in seperate model folder
+
+Task.js
+const mongoose = require('mongoose');
+
+const TaskSchema =  new mongoose.Schema({
+    name:String, completed:Boolean // only accept name & completed value with specified datatype
+})
+
+module.exports = mongoose.model('Task',TaskSchema)
+
+
+
+9. Perform Crud Operation
+Import Task.js(Model) for validation and schema 
+
+//insert 
+const task = await Task.create(req.body);
+
+//select all
+const tasks = await Task.find({});
+
+//Select One
+const task = await Task.findOne({ _id: String(req.params.id) }).exec();
+
+//Delete
+const task = await Task.findOneAndDelete({
+    _id: String(req.params.id),
+  }).exec();
+
+//Update
+const task = await Task.findOneAndUpdate({
+    _id : taskID
+  }, req.body,{
+    new: true, runValidators: true
+  });
+//overwrite:true // it replaces the entire item not the fields
+it is mostly used in put instead of patch method in response
+
+  new :true => post updatation, return the latest value
+  runValidators -> runvalidation for update as it is not by default active in case of update
+
+  **By Default validaton is true for select , delete and insert but not for update
+    We need to explicit set option to runvalidation in case of Update
+
+**If we need to check if the value exist or not for selectone, delete or update, check for null post crud
+if(!task){
+    return res.status(404).json({
+      msg: `No task with id {$taskID}`
+    })
+  }
+
+========================================================================================================
+  To create 404 routes not found
+  create middleware with not-found.js
+
+not-found.js
+const notFound = (req,res) => res.status(404).send('Routes not found');
+    module.exports = notFound;
+
+app.js
+const notFound = require('../middleware/not-found') //importing that middleware
+app.use(notFound) // ***to be placed after the main routes
+
+========================================================================================================
+Async Wrapper Middleware to reduce the try-catch redundancy from our controller and keep a standard error message
+
+create async.js in middleware
+#async.js
+const asyncWrapper = (fn) => {
+    return async (req, res, next) => {
+      try {
+  
+          await fn(req,res,next)
+      } catch (error) {
+        next(error);// to handle the error  kind refer below 
+      }
+    };
+  };
+  
+  module.exports = asyncWrapper;
+
+  modify the controller 
+  import the async.js middleware
+
+  **Before**
+  const getAllTasks = async (req, res) => {
+    try {
+      const tasks = await Task.find({});
+  
+      return res.status(201).json({ tasks });
+    } catch (error) {
+      return res.status(500).json({ Message: error });
+    }
+
+  };
+
+
+  **After**
+  const getAllTasks = AsyncWrapper(async (req, res) => {
+      
+    const tasks = await Task.find({});
+  res.status(201).json({ tasks });
+
+});
+
+ Error handling in Middleware
+create a middleware error-handler.js
+const errorHandlerMiddleware  = (err, req, res, next) =>  res.status(500).json({ msg: err})
+module.exports = errorHandlerMiddleware
+
+
+You define error-handling middleware last, after other app.use() and routes calls; for example:
+app.use(errorHandlerMiddleware)
+
+
+==============================================================================================================
+Custom Error handling
+If we want to handle custom 404 or any other error.
+We can create a custom error handling class which extends error class
+and pass it to our created error handling above.
+
+Create Class custom-error in error folder & a function to create new instance of customerror class and pass message and status in constructor
+
+>>custom-error.js
+class CustomAPIError extends Error {
+
+  constructor(message, statusCode) {
+      super(message)
+      this.statusCode = statusCode
+  }
+}
+const createCustomError = (msg, statusCode) => {
+  return new CustomAPIError(msg, statusCode)
+}
+
+module.exports = { createCustomError, CustomAPIError }
+
+
+>>In controller handle 404
+return next(createCustomError(`No task with id : ${taskID}`, 404))//function of class
+
+>>in error errorHandlerMiddleware
+const {CustomAPIError} = require('../errors/custom-error') // import the class
+
+if(err instanceof CustomAPIError){
+  return res.status(err.statusCode).json({msg: err.message})
+}
+
+//show validaton errors in more meaningfull way
+let customError ={
+  statusCode : err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+  msg: err.message || 'Something went wrong'
+}
+
+return res.status(customError.statusCode).json(msg: customError.msg)
+
+>>
+//handle error with specified error code
+if(err.code && err.code === 11000){
+  //handle error 
+}
+
+
+============Validation & Error cast==========
+If we want to have validation for multiple fields than having multiple if and else statement is not the solution
+in this case we can check for validation in error handler middleware and write a dynamic code for all validation error
+
+if (err.name === 'ValidationError') {
+  customError.msg = Object.values(err.errors).map( (item) => item.message).join(',')
+  customError.statusCode = 400
+}
+
+same we can do for cast error
+
+
+
+==========================================================================
+
+Package : Express Async Error ??? tutorial 04-store
+
+
+=====================================================
+*** Filter in Mongo
+
+Passing multiple value to filter 
+const { featured, company, name} = req.query;
+  const queryObject = {};
+  if (featured) 
+    queryObject.featured = featured === "true" ? true : false
+
+    if(company)
+       queryObject.company = company
+  if(name)
+       queryObject.name = {$regex: name, $options:'i'}
+
+  const products = await Product.find(queryObject);
+
+
+  =====================================================
+
+  $regex
+  Selects documents where values match a specified regular expression.
+  Its is LIKE operator in mysql
+
+queryObject.name = {$regex: name, $options:'i'} 
+
+==============    SOrting & Select in Mongo DB==================
+if (sort) {
+  const sortList = sort.split(',').join(' ');
+  result = result.sort(sortList);
+} else {
+  result = result.sort('createdAt');
+}
+
+//fields
+if(fields){
+  const fieldsList = fields.split(',').join(' ');
+  result = result.select(fieldsList);
+}
+
+
+**Manual Pagination in MOngo***
+
+//pagination
+  const page = Number(req.query.page) || 1
+  const limit = Number(req.query.limit) || 10
+  const skip = (page - 1 )* limit
+  result = result.skip(skip).limit(limit)
+
+
+*****   Numerica Filter   **********
+
+
+**Packages**
+dotenv
+express-async-errors
+mongoose
+nodemon
+jsonwebtoken
+
+*****   JWT Token   **********
+
+to sign and use JWT in node we use package jsonwebtoken
+
+1. install jsonwebtoken
+
+2. create Token once loged in 
+const token = jwt.sign({
+  id, username
+}, process.env.JWT_SECRET,{expresIn:'30d'}) 
+// store JWT_SECRET code in .env using https://www.allkeysgenerator.com/ --> encryption key--> 256 bit
+
+3. Verify the token
+const decoded =  jwt.verify(token, process.env.JWT_SECRET )
+//decoed contains all the value stored in the token
+
+
+
+==authentication middleware for checking jwt token===
+
+1. create a middleware with the name authentication 
+import the jsonwebtoken
+
+const auth = async (req, res, next) => {
+  //check header
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthenticatedError('Authentication Invalid')
+      // no token found
+  }
+
+  const token = authHeader.split(' ')[1]
+  try {
+      const payload = jwt.verify(token, process.env.JWT_SECRET)
+      req.user = { userId: payload.userId, name: payload.name }
+      next()
+  } catch (error) {
+      throw new UnauthenticatedError('Authentication failed')
+
+  }
+
+}
+
+
+2. If you want to use that authentication in the entire router
+In app.js in the router section
+
+app.use('/api/v1/jobs',<middlewarename>,<routername>)
+// this middleware will be applied to all the routes in that router by default.
+
+
+========================================
+bcryptjs package to hash password
+
+>>To hash the password
+const bcrypt = require('bcryptjs')
+
+const salt = await bcrypt.genSalt(10)
+const hashedPassword = await bcrypt.hash(password, salt)
+
+>>to compare password
+const isMatch = await bcrypt.compare(candidatePassword, this.password)
+
+
+
+==========Mongoose Pre Middleware=================
+If we want to perform some task before executing controller, we can write mongoose pre middleware which wil run previous to execution of action on User Schema
+For Eg, we want to hash password before saving to db
+We can write password hashing in the mongoose middleware
+
+before the actual schema in the model file
+**Always use function keyword
+
+UserSchema.pre('save', async function(next){
+  const salt = await bcrypt.genSalt(10)
+  this.password =  await bcrypt.hash(this.password, salt)
+  next()
+})
+
+
+==========Mongoose Instance methods=================
+If we want to write a function in mongoose schema which we call using intance of schema in the controller, we can do by creating methods in schema and calling them in controller
+
+//creating a function in schema
+UserSchema.methods.functionName = function(){
+  return ...;
+}
+
+//calling a schema method/ function in controller
+const user = UserSchema.create{{..}} // creating a instance
+user.functionName()//calling
+
+
+
+==============Security===================
+
+
+
+**express-rate-limiter
+1. install the package express-rate-limiter
+
+2. use the package in the app.js
+const rateLimit = require('express-rate-limit')
+app.set('trust proxy', 1) // if deploying package online(aws or proxy server)
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+app.use(limiter) // Apply the rate limiting middleware to all requests
+
+app.use('/api/', apiLimiter) // apply rate limiter to a specific router
+
+
+** deploying code on heroku
+1.
+make sure you install heroku cli and git on your system
+create account on heroku
+
+2.create procfile for to explicitly declare what command should be executed to start your app.
+web: npm start
+
+3. entry in package.json 
+
+ "engines": {
+  "node": "14.x"
+},
+
+
+3. git Int
+git add .
+git commit -a -m "initial commit"
+heroku login
+heroku create <optional app nam>
+  git push heroku main or git push heroku master which ever works
+
+  4. view logs
+  heroku logs --tail
+
+  5. as .env file will not be accessible due to git ignored
+  we need to set it as config vars in heroku and restart to see the effect
+
+
+
+
