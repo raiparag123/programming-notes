@@ -1,0 +1,54 @@
+TYPESCRIPT
+
+Resources:
+    Book :
+        https://basarat.gitbook.io/typescript/getting-started
+    
+    Youtube: 
+        https://www.youtube.com/watch?v=ahCwqrYpIuM&t=440s
+    
+    CheatSheet :
+        https://www.freecodecamp.org/news/content/images/size/w1600/2022/01/TypeScript-Cheat-Sheet--DARK-.png
+
+Basics
+    What is TypeScript ?
+        TypeScript is a superset of JavaScript, meaning that it does everything that JavaScript does, but with some added features.
+        The main reason for using TypeScript is to add static typing to JavaScript. Static typing means that the type of a variable cannot be changed at any point in a program. It can prevent a LOT of bugs which is present in Javascript using dynamic typing.
+        TypeScript cannot be understood by browsers, so it has to be compiled into JavaScript by the TypeScript Compiler (TSC)
+    
+    Why you should use TypeScript ?
+        Research has shown that TypeScript can spot 15% of common bugs.
+        Readability – it is easier to see what the code it supposed to do. And when working in a team, it is easier to see what the other developers intended to.
+    
+    Drawbacks of TypeScript
+        TypeScript takes longer to write than JavaScript, as you have to specify types, so for smaller solo projects it might not be worth using it.
+        TypeScript has to be compiled – which can take time, especially in larger projects.
+    
+    ------------------------------------------------------------------------------
+
+    Use Typescript
+        Install: We need to install typescript globally to use it
+            npm i -g typescript
+
+        **save the file in .ts extenstion
+
+        Compile :We need to compile the typescript code into js code.
+            ** An interesting thing about TypeScript is that it reports errors in your text editor whilst you are coding, but it will always compile your code – whether there are errors or not. 
+
+            Normal: it creates a index.js file.
+                tsc index
+            Output file : If you want to specify the name of the output file
+                tsc index.ts --outfile file-name.js
+            Watch Flag : If you want TSC to compile your code automatically, whenever you make a change
+                tsc index.ts -w // error will shown in realtime
+            
+            Compile every file and watch 
+                tsc -w
+        
+        Set Up the TS Config File (tsconfig.json)
+            Should be in root directory and in this file we can specify the root files, compiler options, and how strict we want TypeScript to be in checking our project.
+            **When input files are specified on the command line (for example, tsc index), tsconfig.json files are ignored.
+            
+        
+
+
