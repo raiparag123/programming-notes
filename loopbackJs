@@ -1,1 +1,25 @@
-LoopBack
+LoopBack v4
+
+Basics
+    A highly extensible Node.js and TypeScript framework for building APIs and microservices.
+
+Setup 
+    Install loopback cli global
+    $ npm install -g @loopback/cli
+
+    Create a new project
+    $lb4 app
+
+    Starting the project :
+    The project comes with a "ping" route to test the project. Let's try it out by running the projects. 
+    $ cd getting-started
+    $ npm start
+    In a browser, visit http://127.0.0.1:3000/ping
+
+    Add your own controller
+     $ lb4 controller
+        [?] Controller class name: hello
+        [?] What kind of controller would you like to generate? Empty Controller
+        create src/controllers/hello.controller.ts
+        update src/controllers/index.ts
+        Controller Hello was now created in src/controllers/
