@@ -3,9 +3,11 @@ TYPESCRIPT
 Resources:
     Book :
         https://basarat.gitbook.io/typescript/getting-started
-    
+        
+
     Youtube: 
         https://www.youtube.com/watch?v=ahCwqrYpIuM&t=440s
+        https://www.youtube.com/watch?v=BwuLxPH8IDs
     
     CheatSheet :
         https://www.freecodecamp.org/news/content/images/size/w1600/2022/01/TypeScript-Cheat-Sheet--DARK-.png
@@ -48,6 +50,11 @@ Basics
         Set Up the TS Config File (tsconfig.json)
             Should be in root directory and in this file we can specify the root files, compiler options, and how strict we want TypeScript to be in checking our project.
             **When input files are specified on the command line (for example, tsc index), tsconfig.json files are ignored.
+        
+        Mixin :
+        By default typescript cannot intert more than 1 class.
+        So to eliminate this limitation, we can use mixin which enables us to use methods of those class in the parent class
+        https://blog.logrocket.com/typescript-mixins-examples-and-use-cases/
             
         
 

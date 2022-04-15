@@ -22,4 +22,19 @@ Setup
         [?] What kind of controller would you like to generate? Empty Controller
         create src/controllers/hello.controller.ts
         update src/controllers/index.ts
-        Controller Hello was now created in src/controllers/
+        Controller Hello was now created in src/controllers/ 
+
+    Create Model :
+        $lb4 model
+    
+    Adding Database :
+        $lb4 datasource
+    
+    Adding Repository :
+        $lb4 repository
+    
+    Adding Controller :
+        $lb4 controller
+
+
+    
