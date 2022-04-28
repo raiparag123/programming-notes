@@ -392,9 +392,20 @@ JS functions
             let lastName = "Doe";
 
             let text = `Welcome ${firstName}, ${lastName}!`; -->
+====================================================================================
 
-      
+PROMISE      
+            const hello = new Promise((resolve,reject) => {
+              if(done)
+                  resolve('hello')
+              else 
+                  reject('rejected')
+          })
           
+          const hello123 =  () => {
+              hello.then( ok => console.log('Ok it is done'))
+              .catch(err => console.log('error'))
+          } 
 
 
         

@@ -36,5 +36,7 @@ Setup
     Adding Controller :
         $lb4 controller
 
+If we Db is empty and model is set and we want to create a table which is same as model then in index.ts before app.start type app.migrateSchema.
+It will create a table with the database.
 
     
